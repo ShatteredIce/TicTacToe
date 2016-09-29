@@ -3,7 +3,7 @@
 using namespace std;
 
 void printBoard(char tileState[]);
-int getTile(char row, char column);
+int getTile(char in[], char row, char column);
 void setTile(char in[], int index, int currentPlayer);
 void resetBoard(char in[]);
 bool checkWin(char in[], char move);
@@ -23,20 +23,21 @@ int main(){
   int ties = 0;
   bool quit = false;
   bool running = true;
+  char playAgain = 'n';
   char move[3];
   
   cout << endl << "Welcome to the TicTacToe console arena!" << endl;
   
   while(running == true){
     printBoard(tileState);
-    
+    cout << endl;
     do
     {
-      cout << endl << "Enter move: ";
+      cout << "Enter move: ";
       cin.getline(move, 3);
-    } while(getTile(move[0], move[1]) == 9);
-      
-    setTile(tileState, getTile(move[0], move[1]), currentPlayer);
+    } while(getTile(tileState, move[0], move[1]) == 9);
+
+    setTile(tileState, getTile(tileState, move[0], move[1]), currentPlayer);
     
     if(currentPlayer == 0){
       if(checkWin(tileState, X_MOVE)){
@@ -44,6 +45,14 @@ int main(){
 	printBoard(tileState);
 	cout << endl << '\t' << "X Wins: " << xWins << '\t' << "O Wins: " << oWins
 	     << '\t' << "Ties: " << ties << endl;
+	cout << "Do you wish to play again? (y/n)" << endl;
+	playAgain = 'n';
+	cin >> playAgain;
+	if(playAgain != 'y'){
+	  running = false;
+	  cout << "Program terminated";
+	  return 0;
+	}
 	resetBoard(tileState);
 	currentPlayer = 0;
       }
@@ -52,6 +61,13 @@ int main(){
 	printBoard(tileState);
 	cout << endl << '\t' << "X Wins: " << xWins << '\t' << "O Wins: " << oWins
 	     << '\t' << "Ties: " << ties << endl;
+	playAgain = 'n';
+	cin >> playAgain;
+	if(playAgain != 'y'){
+	  running = false;
+	  cout << "Program terminated";
+	  return 0;
+	}
 	resetBoard(tileState);
 	currentPlayer = 0;
       }
@@ -100,36 +116,40 @@ void printBoard(char tileState[]){
   tileState[8] << endl;
 }
 
-int getTile(char row, char column){
+int getTile(char board[], char row, char column){
+  int tile = 9;
   if(row == 'a' && column == '1'){
-    return 0;
+    tile = 0;
   }
   else if(row == 'a' && column == '2'){
-    return 1;
+    tile = 1;
   }
   else if(row == 'a' && column == '3'){
-    return 2;
+    tile = 2;
   }
   else if(row == 'b' && column == '1'){
-    return 3;
-  }    
+    tile = 3;
+  }
   else if(row == 'b' && column == '2'){
-    return 4;
+    tile = 4;
   }
   else if(row == 'b' && column == '3'){
-    return 5;
+    tile = 5;
   }
   else if(row == 'c' && column == '1'){
-    return 6;
+    tile = 6;
   }
   else if(row == 'c' && column == '2'){
-    return 7;
+    tile = 7;
   }
   else if(row == 'c' && column == '3'){
-    return 8;
+    tile = 8;
+  }
+  if(tile != 9 && board[tile] != BLANK){
+    return 9;
   }
   else{
-    return 9;
+    return tile;
   }
 }
 
@@ -149,34 +169,28 @@ void resetBoard(char board[]){
 }
 
 bool checkWin(char board[], char move){
-  if(board[0] == board[1] == move){
-    cout << "equal" << endl;
-  }
-  else{
-    cout << "not equal" << endl;
-  }
-  if(board[0] == board[1] == board[2] == move){
+  if(board[0] == board[1] && board[0] == board[2] && board[0] == move){
     return true;
   }
-  else if(board[3] == board[4] == board[5] == move){
+  else if(board[3] == board[4] && board[3] == board[5] && board[3] == move){
     return true;
   }
-  else if(board[6] == board[7] == board[8] == move){
+  else if(board[6] == board[7] && board[6] == board[8] && board[6] == move){
     return true;
   }
-  else if(board[0] == board[3] == board[6] == move){
+  else if(board[0] == board[3] && board[0] == board[6] && board[0] == move){
     return true;
   }
-  else if(board[1] == board[4] == board[7] == move){
+  else if(board[1] == board[4] && board[1] == board[7] && board[1] == move){
     return true;
   }
-  else if(board[2] == board[5] == board[8] == move){
+  else if(board[2] == board[5] && board[2] == board[8] && board[2] == move){
     return true;
   }
-  else if(board[0] == board[4] == board[8] == move){
+  else if(board[0] == board[4] && board[0] == board[8] && board[0] == move){
     return true;
   }
-  else if(board[2] == board[4] == board[6] == move){
+  else if(board[2] == board[4] && board[2] == board[6] && board[2] == move){
     return true;
   }
   else{
